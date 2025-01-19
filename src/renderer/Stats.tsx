@@ -222,22 +222,23 @@ export function Stats({ onCancel }: StatsProps) {
           </Box>
           {granularity === 'chilled' && (
             <List spacing={2}>
-              {uniqueCategories.map((category) => {
-                const totalMinutes = demoData
-                  .filter((entry) => entry.category === category)
-                  .reduce((sum, entry, index, array) => {
-                    const duration =
-                      index < array.length - 1
-                        ? (array[index + 1].time - entry.time) / 1000 / 60
-                        : 60;
-                    return duration;
-                  }, 0);
-                return (
-                  <ListItem key={category}>
-                    • {category} ({Math.round(totalMinutes)}m)
-                  </ListItem>
-                );
-              })}
+            {uniqueCategories.map((category) => {
+              const totalMinutes = demoData
+              .filter((entry) => entry.category === category)
+              .reduce((sum, entry, index, array) => {
+                const nextEntry = array[index + 1];
+                const duration =
+                nextEntry && nextEntry.category === category
+                  ? (nextEntry.time - entry.time) / 1000 / 60
+                  : 0;
+                return sum + duration;
+              }, 0);
+              return (
+              <ListItem key={category}>
+                • {category} ({Math.round(totalMinutes)}m)
+              </ListItem>
+              );
+            })}
             </List>
           )}
           {granularity === 'normal' && (
@@ -266,7 +267,7 @@ export function Stats({ onCancel }: StatsProps) {
             </List>
           )}
           {granularity === 'nuclear' && (
-            <List spacing={2}>
+            <List spacing={2} pl={4} fontSize="sm">
               {demoData.reduce((acc, entry, index, array) => {
               const duration =
                 index < array.length - 1
@@ -294,8 +295,8 @@ export function Stats({ onCancel }: StatsProps) {
                 • {new Date(entry.time).toLocaleTimeString()} -{' '}
                 {entry.category} ({Math.round(entry.duration)}m) -{' '}
                 <span title={entry.summary}>
-                {entry.summary.length > 50
-                  ? `${entry.summary.substring(0, 50)}...`
+                {entry.summary.length > 60
+                  ? `${entry.summary.substring(0, 60)}...`
                   : entry.summary}
                 </span>
               </ListItem>
