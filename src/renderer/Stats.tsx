@@ -243,48 +243,55 @@ export function Stats({ onCancel }: StatsProps) {
           {granularity === 'normal' && (
             <List spacing={2}>
               {uniqueCategories.map((category) => (
-                <ListItem key={category}>
-                  • {category}
-                  <List spacing={1} pl={4} fontSize="sm">
-                    {Array.from(
-                      new Set(
-                        demoData
-                          .filter((entry) => entry.category === category)
-                          .map((entry) => entry.summary),
-                      ),
-                    ).map((summary, index) => (
-                      <ListItem key={index}>• {summary}</ListItem>
-                    ))}
-                  </List>
-                </ListItem>
+              <ListItem key={category}>
+                • {category}
+                <List spacing={1} pl={4} fontSize="sm">
+                {Array.from(
+                  new Set(
+                  demoData
+                    .filter((entry) => entry.category === category)
+                    .map((entry) => entry.summary),
+                  ),
+                ).map((summary, index) => (
+                  <ListItem key={index} title={summary}>
+                  •{' '}
+                  {summary.length > 100
+                    ? `${summary.substring(0, 100)}...`
+                    : summary}
+                  </ListItem>
+                ))}
+                </List>
+              </ListItem>
               ))}
             </List>
           )}
           {granularity === 'nuclear' && (
             <List spacing={2}>
               {demoData.slice(0, 16).map((entry, index) => (
-                <ListItem key={index}>
-                  • {new Date(entry.time).toLocaleTimeString()} -{' '}
-                  {entry.category} (
-                  {Math.round(
-                    index < demoData.length - 1
-                      ? (demoData[index + 1].time - entry.time) / 1000 / 60
-                      : 60,
+              <ListItem key={index}>
+                • {new Date(entry.time).toLocaleTimeString()} -{' '}
+                {entry.category} (
+                {Math.round(
+                index < demoData.length - 1
+                  ? (demoData[index + 1].time - entry.time) / 1000 / 60
+                  : 60,
+                )}
+                m) -{' '}
+                <span title={entry.summary}>
+                {entry.summary.length > 30
+                  ? `${entry.summary.substring(0, 30)}...`
+                  : entry.summary}
+                </span>
+                {Array.isArray(entry.summary) && (
+                <List spacing={1} pl={4} fontSize="xs">
+                  {entry.summary.map(
+                  (detail: string, detailIndex: number) => (
+                    <ListItem key={detailIndex}>• {detail}</ListItem>
+                  ),
                   )}
-                  m) -{' '}
-                  {entry.summary.length > 30
-                    ? `${entry.summary.substring(0, 30)}...`
-                    : entry.summary}
-                  {Array.isArray(entry.summary) && (
-                    <List spacing={1} pl={4} fontSize="xs">
-                      {entry.summary.map(
-                        (detail: string, detailIndex: number) => (
-                          <ListItem key={detailIndex}>• {detail}</ListItem>
-                        ),
-                      )}
-                    </List>
-                  )}
-                </ListItem>
+                </List>
+                )}
+              </ListItem>
               ))}
             </List>
           )}
