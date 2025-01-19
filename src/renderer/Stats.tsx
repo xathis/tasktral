@@ -153,45 +153,47 @@ export function Stats({ onCancel }: StatsProps) {
               height={400}
               data={chartData}
               margin={{
-                top: 20,
-                right: 30,
-                left: 20,
-                bottom: 40,
+              top: 20,
+              right: 30,
+              left: 20,
+              bottom: 40,
               }}
             >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
-                dataKey="hour"
-                label={{ value: 'Hour (UTC)', position: 'bottom', dy: 35 }}
-                tick={{ dy: 10 }}
+              dataKey="hour"
+              label={{ value: 'Hour (UTC)', position: 'bottom', dy: 35 }}
+              tick={{ dy: 10 }}
               />
               <YAxis
-                label={{ value: 'Percent', angle: -90, position: 'insideLeft' }}
+              label={{ value: 'Percent', angle: -90, position: 'insideLeft' }}
               />
-              <Tooltip />
+              <Tooltip 
+              formatter={(value: number) => `${value.toFixed(1)}%`}
+              />
               <Legend
-                verticalAlign="top"
-                align="center"
-                layout="horizontal"
-                iconSize={10}
-                wrapperStyle={{
-                  lineHeight: '40px', // This increases vertical spacing between legend items
-                }}
+              verticalAlign="top"
+              align="center"
+              layout="horizontal"
+              iconSize={10}
+              wrapperStyle={{
+                lineHeight: '40px', // This increases vertical spacing between legend items
+              }}
               />
               {uniqueCategories.map((category) => (
-                <Bar
-                  key={category}
-                  dataKey={category}
-                  stackId="a"
-                  fill={categoryColors[category]}
-                />
+              <Bar
+                key={category}
+                dataKey={category}
+                stackId="a"
+                fill={categoryColors[category]}
+              />
               ))}
             </BarChart>
           </Box>
         </VStack>
 
         {/* Right side - Summary */}
-        <VStack align="flex-start" flex={1}>
+        <VStack align="flex-start" flex={2}>
           <Heading size="xl" mb={4}>
             Summary
           </Heading>
@@ -234,9 +236,9 @@ export function Stats({ onCancel }: StatsProps) {
                 return sum + duration;
               }, 0);
               return (
-              <ListItem key={category}>
+                <ListItem key={category} fontSize="lg">
                 • {category} ({Math.round(totalMinutes)}m)
-              </ListItem>
+                </ListItem>
               );
             })}
             </List>
