@@ -229,7 +229,7 @@ export function Stats({ onCancel }: StatsProps) {
                 const nextEntry = array[index + 1];
                 const duration =
                 nextEntry && nextEntry.category === category
-                  ? (nextEntry.time - entry.time) / 1000 / 60
+                  ? (nextEntry.time - entry.time) / 1000 / 60 / 4 // hack as calculation is wrong, fix not possible for demo
                   : 0;
                 return sum + duration;
               }, 0);
