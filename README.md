@@ -17,7 +17,7 @@ Credit to [agent.exe](https://github.com/corbt/agent.exe) by Kyle Corbitt ([corb
 
 ### Demo video
 
-### Screenshot
+https://github.com/user-attachments/assets/d545b19d-1a21-45fa-b6f2-fa39d754f1a5
 
 ### Getting started
 
@@ -26,6 +26,10 @@ Credit to [agent.exe](https://github.com/corbt/agent.exe) by Kyle Corbitt ([corb
 - `npm install`
 - Rename `.env.example` --> `.env` and add your Mistral AI API Key
 - `npm start`
+
+
+
+
 
 ### Supported systems
 
