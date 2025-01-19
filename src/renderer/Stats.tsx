@@ -255,8 +255,8 @@ export function Stats({ onCancel }: StatsProps) {
                 ).map((summary, index) => (
                   <ListItem key={index} title={summary}>
                   •{' '}
-                  {summary.length > 100
-                    ? `${summary.substring(0, 100)}...`
+                  {summary.length > 130
+                    ? `${summary.substring(0, 130)}...`
                     : summary}
                   </ListItem>
                 ))}
@@ -267,30 +267,37 @@ export function Stats({ onCancel }: StatsProps) {
           )}
           {granularity === 'nuclear' && (
             <List spacing={2}>
-              {demoData.slice(0, 16).map((entry, index) => (
+              {demoData.reduce((acc, entry, index, array) => {
+              const duration =
+                index < array.length - 1
+                ? (array[index + 1].time - entry.time) / 1000 / 60
+                : 60;
+
+              if (
+                acc.length > 0 &&
+                acc[acc.length - 1].category === entry.category &&
+                acc[acc.length - 1].summary === entry.summary
+              ) {
+                acc[acc.length - 1].duration += duration;
+                acc[acc.length - 1].endTime = entry.time;
+              } else {
+                acc.push({
+                ...entry,
+                duration,
+                endTime: entry.time,
+                });
+              }
+
+              return acc;
+              }, []).map((entry, index) => (
               <ListItem key={index}>
                 • {new Date(entry.time).toLocaleTimeString()} -{' '}
-                {entry.category} (
-                {Math.round(
-                index < demoData.length - 1
-                  ? (demoData[index + 1].time - entry.time) / 1000 / 60
-                  : 60,
-                )}
-                m) -{' '}
+                {entry.category} ({Math.round(entry.duration)}m) -{' '}
                 <span title={entry.summary}>
-                {entry.summary.length > 30
-                  ? `${entry.summary.substring(0, 30)}...`
+                {entry.summary.length > 50
+                  ? `${entry.summary.substring(0, 50)}...`
                   : entry.summary}
                 </span>
-                {Array.isArray(entry.summary) && (
-                <List spacing={1} pl={4} fontSize="xs">
-                  {entry.summary.map(
-                  (detail: string, detailIndex: number) => (
-                    <ListItem key={detailIndex}>• {detail}</ListItem>
-                  ),
-                  )}
-                </List>
-                )}
               </ListItem>
               ))}
             </List>
